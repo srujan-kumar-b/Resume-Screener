@@ -193,6 +193,11 @@ model_bundle = load_model_bundle(MODEL_PATH)
 model = model_bundle["model"]
 model_accuracy = model_bundle.get("accuracy")
 
+if isinstance(model_accuracy, (int, float)):
+    print(f"Loaded model accuracy: {model_accuracy * 100:.2f}%")
+else:
+    print("Loaded model accuracy: unavailable")
+
 
 def get_prediction_confidence(model, features, predicted_label):
     if hasattr(model, "predict_proba"):
