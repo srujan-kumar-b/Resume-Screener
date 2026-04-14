@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Resume Screener</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-1: #0b1f2a;
+            --bg-2: #11303f;
+            --panel: rgba(248, 252, 255, 0.95);
+            --ink: #062033;
+            --muted: #4d6675;
+            --accent: #ff8a00;
+            --accent-2: #0ea5e9;
+            --ok: #0f766e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255, 138, 0, 0.22), transparent 35%),
+                radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.3), transparent 35%),
+                linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .shell {
+            width: min(980px, 100%);
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 24px 55px rgba(2, 28, 43, 0.35);
+            animation: rise 550ms ease-out;
+        }
+
+        @keyframes rise {
+            from { transform: translateY(16px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 4vw, 2.7rem);
+            line-height: 1.12;
+        }
+
+        .sub {
+            margin: 10px 0 24px;
+            color: var(--muted);
+            max-width: 760px;
+            font-size: 1.02rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 18px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5eef4;
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .label {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.8rem;
+            color: var(--accent-2);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .form-row {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            border: 1px solid #d4e3ee;
+            border-radius: 12px;
+            padding: 11px 12px;
+            font-size: 0.98rem;
+            font-family: inherit;
+            background: #fbfdff;
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font-weight: 700;
+            font-size: 0.98rem;
+            color: #08263b;
+            background: linear-gradient(135deg, #ffd166, var(--accent));
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+            box-shadow: 0 10px 20px rgba(255, 138, 0, 0.25);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 24px rgba(255, 138, 0, 0.35);
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #13384d;
+            line-height: 1.6;
+        }
+
+        li { margin-bottom: 8px; }
+
+        .pill {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #d9f99d;
+            color: var(--ok);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 880px) {
+            .grid { grid-template-columns: 1fr; }
+            .shell { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <h1>AI Resume Screening and Job Role Prediction</h1>
+        <p class="sub">
+            Upload a resume to automatically screen candidate profiles, extract skills, estimate fit scores,
+            and receive practical improvement recommendations powered by your trained model.
+        </p>
+
+        <section class="grid">
+            <article class="card">
+                <span class="label">Upload Resume</span>
+                <form action="/analyze" method="POST" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <input type="text" name="name" placeholder="Candidate name" required>
+                        <input type="file" name="resume" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg,.webp,.bmp,.tif,.tiff" required>
+                    </div>
+                    <button type="submit">Predict Job Role</button>
+                    <div class="pill">Supports image, PDF, DOCX, TXT</div>
+                </form>
+            </article>
+
+            <article class="card">
+                <span class="label">Objectives Covered</span>
+                <ul>
+                    <li>Automate resume screening to reduce manual review effort.</li>
+                    <li>Extract skills and keywords using NLP-style text matching.</li>
+                    <li>Provide candidate feedback on missing skills and profile gaps.</li>
+                    <li>Offer a cost-effective ATS alternative for small and mid-size teams.</li>
+                </ul>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

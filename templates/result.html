@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #071a29;
+            --bg-2: #0c3042;
+            --panel: rgba(247, 252, 255, 0.97);
+            --ink: #09273b;
+            --muted: #476477;
+            --accent: #f59e0b;
+            --soft: #dbeafe;
+            --warn: #b45309;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 22px;
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            color: var(--ink);
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.2), transparent 35%),
+                radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.2), transparent 35%),
+                linear-gradient(140deg, var(--bg), var(--bg-2));
+            display: grid;
+            place-items: center;
+        }
+
+        .wrap {
+            width: min(980px, 100%);
+            background: var(--panel);
+            border-radius: 22px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            box-shadow: 0 22px 48px rgba(2, 23, 37, 0.42);
+            animation: slide-in 500ms ease-out;
+        }
+
+        @keyframes slide-in {
+            from { transform: translateY(12px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .meta {
+            font-family: "JetBrains Mono", monospace;
+            color: #0284c7;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: clamp(1.5rem, 3.5vw, 2.3rem);
+        }
+
+        .muted {
+            color: var(--muted);
+            margin: 0 0 22px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .kpi {
+            border: 1px solid #dce9f3;
+            border-radius: 14px;
+            padding: 14px;
+            background: #ffffff;
+        }
+
+        .kpi .label {
+            font-size: 0.83rem;
+            color: var(--muted);
+        }
+
+        .kpi .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .role {
+            border-left: 6px solid var(--accent);
+            background: #fff8eb;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .accuracy-chip {
+            background: #fff;
+            border: 1px solid #fed7aa;
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #92400e;
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #dce9f3;
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .panel h3 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+        }
+
+        .panel p {
+            margin: 0;
+            line-height: 1.55;
+            color: #1d4258;
+        }
+
+        .error {
+            border-left: 6px solid #ef4444;
+            background: #fff1f2;
+            color: #991b1b;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            text-decoration: none;
+            color: #083148;
+            font-weight: 700;
+            background: var(--soft);
+            padding: 10px 14px;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+            .panel-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<main class="wrap">
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% else %}
+    <div class="meta">Prediction Summary</div>
+    <h1>{{ name }}</h1>
+    <p class="muted">Automated resume screening result generated by your trained model.</p>
+
+    <div class="role">
+        <span><strong>Predicted Job Role:</strong> {{ role }}</span>
+        <span class="accuracy-chip">Prediction Confidence: {% if prediction_confidence is not none %}{{ prediction_confidence }}%{% else %}N/A{% endif %}</span>
+    </div>
+
+    <section class="grid">
+        <article class="kpi">
+            <div class="label">Match Score</div>
+            <div class="value">{{ match_score }}%</div>
+        </article>
+        <article class="kpi">
+            <div class="label">Completeness Score</div>
+            <div class="value">{{ completeness_score }}%</div>
+        </article>
+        <article class="kpi">
+            <div class="label">Final Score</div>
+            <div class="value">{{ final_score }}%</div>
+        </article>
+    </section>
+
+    <section class="panel-grid">
+        <article class="panel">
+            <h3>Extracted Skills</h3>
+            <p>{{ skills }}</p>
+        </article>
+        <article class="panel">
+            <h3>Missing Skills</h3>
+            <p>{{ missing }}</p>
+        </article>
+        <article class="panel">
+            <h3>Experience Level</h3>
+            <p>{{ exp }}</p>
+        </article>
+        <article class="panel">
+            <h3>Resume Gaps</h3>
+            <p>{{ gaps }}</p>
+        </article>
+        <article class="panel" style="grid-column: 1 / -1; border-color: #fde68a; background: #fffbeb;">
+            <h3 style="color: var(--warn);">Recommendations</h3>
+            <p>{{ rec }}</p>
+        </article>
+    </section>
+    {% endif %}
+
+    <a href="/" class="back">Analyze Another Resume</a>
+</main>
+
+</body>
+</html>
